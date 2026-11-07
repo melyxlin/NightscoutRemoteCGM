@@ -38,7 +38,7 @@ final class NightscoutFetcher {
     }
 }
 
-extension GlucoseEntry: @retroactive GlucoseValue {
+extension GlucoseEntry: @retroactive LoopKit.GlucoseValue {
     public var startDate: Date { date }
     public var quantity: LoopQuantity { .init(unit: .milligramsPerDeciliter, doubleValue: glucose) }
 }

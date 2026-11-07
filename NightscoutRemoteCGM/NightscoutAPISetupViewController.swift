@@ -58,11 +58,11 @@ final class NightscoutAPISetupViewController: UINavigationController, Completion
     }
     
     private func dismissSetup(){
-        self.cgmManager.notifyDelegateOfDeletion {
-            DispatchQueue.main.async {
-                self.completionDelegate?.completionNotifyingDidComplete(self)
-                self.dismiss(animated: true)
-            }
+        Task { @MainActor [weak self] in
+            guard let self = self else { return }
+            await self.cgmManager.delete()
+            self.completionDelegate?.completionNotifyingDidComplete(self)
+            self.dismiss(animated: true)
         }
     }
     

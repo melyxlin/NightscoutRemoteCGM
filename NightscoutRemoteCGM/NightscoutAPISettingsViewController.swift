@@ -44,12 +44,12 @@ public final class NightscoutAPISettingsViewController: UIHostingController<Sett
         let onDelete = viewModel.onDelete
             .sink { [weak self] in
                 guard let self = self else { return }
-                self.cgmManager.notifyDelegateOfDeletion {
-                    DispatchQueue.main.async {
-                        self.completionDelegate?.completionNotifyingDidComplete(self)
-                        self.dismiss(animated: true)
-                    }
-                }
+                Task { @MainActor [weak self] in
+            guard let self = self else { return }
+            await self.cgmManager.delete()
+            self.completionDelegate?.completionNotifyingDidComplete(self)
+            self.dismiss(animated: true)
+        }
             }
 
         lifetime = AnyCancellable {
